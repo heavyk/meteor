@@ -24,6 +24,6 @@ Package.register_extension(
 );
 
 Package.on_test(function (api) {
-  api.add_files(['livescript_tests.coffee', 'livescript_tests.js'],
+  api.add_files(['livescript_tests.ls', 'livescript_tests.js'],
                 ['client', 'server']);
 });
