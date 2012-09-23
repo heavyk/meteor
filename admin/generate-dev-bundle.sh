@@ -2,7 +2,7 @@
 
 set -e
 
-BUNDLE_VERSION=0.1.6
+BUNDLE_VERSION=0.1.7
 UNAME=$(uname)
 ARCH=$(uname -m)
 
@@ -127,6 +127,7 @@ cd "$DIR/lib/node_modules"
 npm install connect@1.8.7 # not 2.x yet. sockjs doesn't work w/ new connect
 npm install gzippo@0.1.7
 npm install optimist@0.3.1
+npm install livescript@1.0.0
 npm install coffee-script@1.3.1
 npm install less@1.3.0
 npm install sass@0.5.0
@@ -143,7 +144,9 @@ npm install fibers@0.6.5
 npm install useragent@1.0.6
 npm install request@2.9.202
 npm install http-proxy@0.8.0
-npm install livescript@1.0.0
+npm install simplesmtp@0.1.19
+npm install mailcomposer@0.1.15
+npm install stream-buffers@0.2.3
 
 # unused, but kept in bundle for compatibility for a while.
 npm install connect-gzip@0.1.5
