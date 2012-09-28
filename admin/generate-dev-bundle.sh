@@ -155,7 +155,7 @@ EOF
 
 
 ./configure --prefix="$DIR"
-make -j4
+make -j8
 make install PORTABLE=1
 # PORTABLE=1 is a node hack to make npm look relative to itself instead
 # of hard coding the PREFIX.
@@ -172,7 +172,8 @@ npm install connect@1.9.2 # not 2.x yet. sockjs doesn't work w/ new connect
 npm install gzippo@0.1.7
 npm install optimist@0.3.4
 npm install coffee-script@1.3.3
-npm install livescript@1.0.0
+npm install LiveScript@1.0.1
+npm install prelude-js@0.6.0
 npm install jamjs@0.2.1
 npm install less@1.3.0
 npm install sass@0.5.0
