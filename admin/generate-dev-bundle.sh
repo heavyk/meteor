@@ -6,8 +6,10 @@ set -u
 BUNDLE_VERSION=0.2.5
 UNAME=$(uname)
 ARCH=$(uname -m)
+CORES=4
 
 if [ "$UNAME" == "Linux" ] ; then
+    CORES=`grep -c ^processor /proc/cpuinfo`
     if [ "$ARCH" != "i686" -a "$ARCH" != "x86_64" ] ; then
         echo "Unsupported architecture: $ARCH"
         echo "Meteor only supports i686 and x86_64 for now."
@@ -17,6 +19,7 @@ if [ "$UNAME" == "Linux" ] ; then
     MONGO_URL="http://fastdl.mongodb.org/linux/${MONGO_NAME}.tgz"
 elif [ "$UNAME" == "Darwin" ] ; then
     SYSCTL_64BIT=$(sysctl -n hw.cpu64bit_capable 2>/dev/null || echo 0)
+    CORES=`sysctl hw.ncpu | awk '{print $2}'`
     if [ "$ARCH" == "i386" -a "1" != "$SYSCTL_64BIT" ] ; then
         # some older macos returns i386 but can run 64 bit binaries.
         # Probably should distribute binaries built on these machines,
@@ -53,12 +56,18 @@ umask 022
 mkdir build
 cd build
 
-git clone git://github.com/joyent/node.git
+mkdir -p "${TARGET_DIR}/.deps"
+if [ -d "${TARGET_DIR}/.deps/node" ]; then
+    bash -e \"cd "${TARGET_DIR}/.deps/node" && git pull\"
+else
+    git clone git://github.com/joyent/node.git "${TARGET_DIR}/.deps"
+fi
+git clone "${TARGET_DIR}/.deps/node"
 cd node
 git checkout v0.8.11
 
 ./configure --prefix="$DIR"
-make -j8
+make -j"$CORES"
 make install PORTABLE=1
 # PORTABLE=1 is a node hack to make npm look relative to itself instead
 # of hard coding the PREFIX.
@@ -121,9 +130,15 @@ mv ../$FIBERS_ARCH .
 cd ../..
 
 
+cd "${TARGET_DIR}/.deps/"
+if [ ! -d "$MONGO_NAME" ]; then
+    # potentially build mongo from src?
+    curl "$MONGO_URL" | tar -xz
+fi
+cp -a "$MONGO_NAME" "${DIR}/mongodb"
 cd "$DIR"
-curl "$MONGO_URL" | tar -xz
-mv "$MONGO_NAME" mongodb
+#curl "$MONGO_URL" | tar -xz
+#mv "$MONGO_NAME" mongodb
 
 # don't ship a number of mongo binaries. they are big and unused. these
 # could be deleted from git dev_bundle but not sure which we'll end up
