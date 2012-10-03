@@ -59,6 +59,7 @@ LocalCollection.Cursor = function (collection, selector, options) {
   if (!options) options = {};
 
   this.collection = collection;
+  this.selector = selector;
 
   if ((typeof selector === "string") || (typeof selector === "number")) {
     // stash for fast path
