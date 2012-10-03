@@ -85,8 +85,9 @@ npm install gzippo@0.1.7
 npm install optimist@0.3.4
 npm install coffee-script@1.3.3
 npm install LiveScript@1.0.1
-npm install prelude-js@0.6.0
-npm install jamjs@0.2.1
+npm install prelude-ls@0.6.0
+npm install bower@0.2.0
+npm install component@0.1.1
 npm install less@1.3.0
 npm install sass@0.5.0
 npm install stylus@0.29.0
