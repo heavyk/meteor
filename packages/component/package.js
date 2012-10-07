@@ -70,15 +70,24 @@ Package.register_extension(
           var deps = Object.keys(config.dependencies);
           deps.map(function(k) {
             var name = k.replace('/', '-');
+            //TODO: if some time has passed, say 2-3 days, do an update instead of skipping it (for master)
+            //TODO: when implementing specific versions, do a version compare here and update if necessary
             if(fs.existsSync(Path.join(odir, name))) return;
             var pkg = Component.install(k, 'master', {
               dest: ".meteor/components",
-              dev: true
+              dev: true //TODO: select dev/production from the config
             });
             
             install(pkg);
           });
-          
+        }
+
+        var css_path = Path.join(odir, 'build.css');
+        var js_path = Path.join(odir, 'build.js');
+        try {
+          st = fs.statSync(js_path);
+        } catch(e) {}
+        if(!st || st.mtime.getTime() !== this_st.mtime.getTime()) {
           Fiber(function() {
             //TODO: use serve_path to determine the location in the build dir
             var builder = new Builder(Path.join(process.cwd(), ".meteor"));
@@ -89,14 +98,14 @@ Package.register_extension(
             builder.build(function(err, obj){
               if (err) Component.utils.fatal(err.message);
 
-              var name = config.name;
-              var css_path = Path.join(odir, 'build.css');
-              var js_path = Path.join(odir, 'build.js');
-
               fs.writeFileSync(css_path, obj.css);
+              fs.utimesSync(css_path, new Date, this_st.mtime);
+
+              //var name = config.name;
               //if (standalone) js.write(';(function(){\n');
               fs.writeFileSync(js_path, obj.require);
               fs.appendFileSync(js_path, obj.js);
+              fs.utimesSync(js_path, new Date, this_st.mtime);
               //if (standalone) js.write('window.' + name + ' = require("' + conf.name + '");\n');
               //if (standalone) js.write('})();');
 
