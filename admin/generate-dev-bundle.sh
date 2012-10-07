@@ -3,7 +3,7 @@
 set -e
 set -u
 
-BUNDLE_VERSION=0.2.5
+BUNDLE_VERSION=0.2.6
 UNAME=$(uname)
 ARCH=$(uname -m)
 CORES=4
@@ -60,7 +60,7 @@ mkdir -p "${TARGET_DIR}/.deps"
 if [ -d "${TARGET_DIR}/.deps/node" ]; then
     bash -e \"cd "${TARGET_DIR}/.deps/node" && git pull\"
 else
-    git clone git://github.com/joyent/node.git "${TARGET_DIR}/.deps"
+    git clone git://github.com/joyent/node.git "${TARGET_DIR}/.deps/node"
 fi
 git clone "${TARGET_DIR}/.deps/node"
 cd node
@@ -81,30 +81,31 @@ which npm
 
 cd "$DIR/lib/node_modules"
 npm install connect@1.9.2 # not 2.x yet. sockjs doesn't work w/ new connect
-npm install gzippo@0.1.7
-npm install optimist@0.3.4
-npm install coffee-script@1.3.3
-npm install LiveScript@1.0.1
-npm install prelude-ls@0.6.0
-npm install bower@0.2.0
-npm install component@0.1.1
-npm install less@1.3.0
-npm install sass@0.5.0
-npm install stylus@0.29.0
-npm install nib@0.8.2
-npm install mime@1.2.7
-npm install semver@1.0.14
-npm install handlebars@1.0.6-2
-npm install mongodb@1.1.5
-npm install uglify-js@1.3.3
-npm install clean-css@0.6.0
-npm install progress@0.0.5
-npm install useragent@1.1.0
-npm install request@2.11.0
-npm install http-proxy@0.8.2
-npm install simplesmtp@0.1.20
-npm install stream-buffers@0.2.3
-npm install keypress@0.1.0
+npm install gzippo@0.1.7 \
+    optimist@0.3.4 \
+    coffee-script@1.3.3 \
+    LiveScript@1.0.1 \
+    prelude-ls@0.6.0 \
+    bower@0.2.0 \
+    component-builder@0.0.5 \
+    component@0.2.0 \
+    less@1.3.0 \
+    sass@0.5.0 \
+    stylus@0.29.0 \
+    nib@0.8.2 \
+    mime@1.2.7 \
+    semver@1.0.14 \
+    handlebars@1.0.6-2 \
+    mongodb@1.1.5 \
+    uglify-js@1.3.3 \
+    clean-css@0.6.0 \
+    progress@0.0.5 \
+    useragent@1.1.0 \
+    request@2.11.0 \
+    http-proxy@0.8.2 \
+    simplesmtp@0.1.20 \
+    stream-buffers@0.2.3 \
+    keypress@0.1.0
  # pinned at older version. 0.1.16+ uses mimelib, not mimelib-noiconv
  # which make the dev bundle much bigger. We need a better solution.
 npm install mailcomposer@0.1.15
@@ -130,7 +131,6 @@ rm -rf *
 mv ../$FIBERS_ARCH .
 cd ../..
 
-
 cd "${TARGET_DIR}/.deps/"
 if [ ! -d "$MONGO_NAME" ]; then
     # potentially build mongo from src?
@@ -138,8 +138,6 @@ if [ ! -d "$MONGO_NAME" ]; then
 fi
 cp -a "$MONGO_NAME" "${DIR}/mongodb"
 cd "$DIR"
-#curl "$MONGO_URL" | tar -xz
-#mv "$MONGO_NAME" mongodb
 
 # don't ship a number of mongo binaries. they are big and unused. these
 # could be deleted from git dev_bundle but not sure which we'll end up
