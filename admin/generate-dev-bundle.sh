@@ -84,8 +84,8 @@ npm install connect@1.9.2 # not 2.x yet. sockjs doesn't work w/ new connect
 npm install gzippo@0.1.7 \
     optimist@0.3.4 \
     coffee-script@1.3.3 \
-    LiveScript@1.0.1 \
-    prelude-ls@0.6.0 \
+    git://github.com/gkz/LiveScript.git \
+    git://github.com/gkz/prelude-ls.git \
     bower@0.2.0 \
     component-builder@0.0.5 \
     component@0.2.0 \
