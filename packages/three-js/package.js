@@ -3,5 +3,5 @@ Package.describe({
 });
 
 Package.on_use(function (api) {
-  api.add_files('three.min.js', 'client');
+  api.add_files('three.js', 'client');
 });
