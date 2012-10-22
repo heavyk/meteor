@@ -11,8 +11,11 @@ Package.register_extension(
 
     var contents = fs.readFileSync(source_path);
     var options = {bare: true};
-    contents = new Buffer(LiveScript.compile(contents.toString('utf8'), options));
-    // XXX report coffee compile failures better?
+    try {
+      contents = new Buffer(LiveScript.compile(contents.toString('utf8'), options));
+    } catch(e) {
+      return bundle.error("File: "+source_path+"\n"+e.message);
+    }
 
     bundle.add_resource({
       type: "js",
