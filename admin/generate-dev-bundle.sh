@@ -86,6 +86,7 @@ npm install gzippo@0.1.7 \
     coffee-script@1.3.3 \
     git://github.com/gkz/LiveScript.git \
     git://github.com/gkz/prelude-ls.git \
+    git://github.com/heavyk/emokit-node.git \
     bower@0.2.0 \
     component-builder@0.0.5 \
     component@0.2.0 \
