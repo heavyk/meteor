@@ -20,7 +20,7 @@ try {
 Package.register_extension(
   "json", function (bundle, source_path, serve_path, where) {
     Fiber(function() {
-      if(source_path.substr(-"component.json".length) === "component.json") {
+      if(serve_path === "/component.json") {
         var st, this_st = fs.statSync(source_path);
         try {
           st = fs.statSync(".meteor/component.json");
