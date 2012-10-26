@@ -81,6 +81,8 @@ which npm
 
 cd "$DIR/lib/node_modules"
 npm install connect@1.9.2 # not 2.x yet. sockjs doesn't work w/ new connect
+# it is necessary to install my own version of component.
+# as of 0.6.3, install will hang on existing dependencies
 npm install gzippo@0.1.7 \
     optimist@0.3.4 \
     coffee-script@1.3.3 \
@@ -89,7 +91,7 @@ npm install gzippo@0.1.7 \
     git://github.com/heavyk/emokit-node.git \
     bower@0.2.0 \
     component-builder@0.0.5 \
-    component@0.2.0 \
+    git://github.com/heavyk/component.git \
     less@1.3.0 \
     sass@0.5.0 \
     stylus@0.29.0 \
