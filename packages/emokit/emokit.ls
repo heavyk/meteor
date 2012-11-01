@@ -1,6 +1,6 @@
 
 
-Emo = __meteor_bootstrap__.require 'emokit-node'
+Emokit = __meteor_bootstrap__.require 'emokit-node'
 EmoServer = __meteor_bootstrap__.require 'sockjs' .createServer!
 Fiber = __meteor_bootstrap__.require 'fibers'
 server = __meteor_bootstrap__.require 'http' .createServer!
@@ -12,9 +12,9 @@ EmoServer.on 'connection', (conn) ->
 		data = JSON.parse msg
 		switch data._
 		| "init" =>
-			conn.write JSON.stringify devices: Emo.init!
+			conn.write JSON.stringify devices: Emokit.init!
 		| "connect" =>
-			get_data = Emo.connect!
+			get_data = Emokit.connect!
 			if typeof get_data is \function
 				id = Meteor.uuid!
 				send {connected: id}
@@ -27,9 +27,11 @@ EmoServer.on 'connection', (conn) ->
 					, (1000 / 130) # emokit polls at 128 Hz
 					conn.on 'close' ->
 						Meteor.clearTimeout ii
-						Emo.close!
+						Emokit.close!
 					Fiber.yield!
 				.run!
+			else
+				send {error: "connection failed"}
 		| otherwisse =>
 			send error: "unknown rpc cmd: "+msg
 
