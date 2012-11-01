@@ -119,7 +119,9 @@ Package.register_extension(
             if(fs.existsSync(Path.join(odir, name))) return;
             install(name, version).wait();
           });
-          fs.utimesSync(js_path, new Date, new Date);
+          try {
+            fs.utimesSync(js_path, new Date, new Date);
+          } catch(e) {}
         }
         
         try {
@@ -168,13 +170,15 @@ Package.register_extension(
         }
 
         // TODO: add an interface which lets the user know that the files are being built
-        var contents = fs.readFileSync(js_path);
-        bundle.add_resource({
-          type: "js",
-          path: "/component.js",
-          data: contents,
-          where: 'client'
-        });
+        try {
+          var contents = fs.readFileSync(js_path);
+          bundle.add_resource({
+            type: "js",
+            path: "/component.js",
+            data: contents,
+            where: 'client'
+          });
+        } catch(e) {}
       }).run();
     }
   }
