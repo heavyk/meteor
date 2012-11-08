@@ -91,7 +91,7 @@ npm install gzippo@0.1.7 \
     git://github.com/heavyk/emokit-node.git \
     bower@0.2.0 \
     component-builder@0.0.5 \
-    git://github.com/heavyk/component.git \
+    component@0.9.0 \
     less@1.3.0 \
     sass@0.5.0 \
     stylus@0.29.0 \
