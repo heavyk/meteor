@@ -1,3 +1,7 @@
+(function(){
+var path = __meteor_bootstrap__.require('path');
+var Future = __meteor_bootstrap__.require(path.join('fibers', 'future'));
+
 // A write fence collects a group of writes, and provides a callback
 // when all of the writes are fully committed and propagated (all
 // observers have been notified of the write and acknowledged it.)
@@ -10,6 +14,11 @@ Meteor._WriteFence = function () {
   self.outstanding_writes = 0;
   self.completion_callbacks = [];
 };
+
+// The current write fence. When there is a current write fence, code
+// that writes to databases should register their writes with it using
+// beginWrite().
+Meteor._CurrentWriteFence = new Meteor.EnvironmentVariable;
 
 _.extend(Meteor._WriteFence.prototype, {
   // Start tracking a write, and return an object to represent it. The
@@ -57,7 +66,6 @@ _.extend(Meteor._WriteFence.prototype, {
   },
 
   // Convenience function. Arms the fence, then blocks until it fires.
-  // Only can be called on the server.
   armAndWait: function () {
     var self = this;
     var future = new Future;
@@ -88,3 +96,4 @@ _.extend(Meteor._WriteFence.prototype, {
     self.retired = true;
   }
 });
+})();
