@@ -7,3 +7,6 @@
 .\#*
 .idea
 .deps
+*.iml
+*.sublime-project
+*.sublime-workspace
