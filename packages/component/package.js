@@ -12,7 +12,11 @@ var Component = require('component');
 var Builder = require('component-builder');
 var utils = Component.utils;
 var log = utils.log;
-var odir = ".meteor/build";
+
+const odir = Path.join(".meteor", "build");
+const css_path = Path.join(odir, 'build.css');
+const js_path = Path.join(odir, 'build.js');
+const component_json_path = Path.join(".meteor", "component.json");
 
 try {
   fs.mkdirSync(odir);
@@ -29,17 +33,14 @@ Package.register_extension(
     if(serve_path === "/component.json") {
       Fiber(function() {
         var st, this_st = fs.statSync(source_path);
-        var css_path = Path.join(odir, 'build.css');
-        var js_path = Path.join(odir, 'build.js');
-
         try {
-          st = fs.statSync(".meteor/component.json");
+          st = fs.statSync(component_json_path);
         } catch(e) {}
 
         if(!st || st.mtime.getTime() !== this_st.mtime.getTime()) {
           contents = fs.readFileSync(source_path);
-          fs.writeFileSync(".meteor/component.json", contents);
-          fs.utimesSync(".meteor/component.json", new Date, this_st.mtime);
+          fs.writeFileSync(component_json_path, contents);
+          fs.utimesSync(component_json_path, new Date, this_st.mtime);
 
           var conf = require(source_path);
           var pkgs = conf.dependencies;
@@ -133,6 +134,7 @@ Package.register_extension(
             var builder = new Builder(Path.join(process.cwd(), ".meteor"));
             var start = new Date;
             builder.development();
+            builder.addLookup(Path.join(process.cwd(), ".meteor", "components"));
             console.log();
             fiber = Fiber.current;
             builder.build(function(err, obj){
@@ -156,6 +158,13 @@ Package.register_extension(
                 where: 'client'
               });
 
+              bundle.add_resource({
+                type: "css",
+                path: "/component.css",
+                data: "" + obj.css,
+                where: 'client'
+              });
+
               var duration = new Date - start;
               log('write', js_path);
               log('write', css_path);
@@ -167,18 +176,28 @@ Package.register_extension(
             });
             Fiber.yield();
           }).run();
-        }
+        } else {
+          // TODO: add an interface which lets the user know that the files are being built
+          try {
+            var contents = fs.readFileSync(js_path);
+            bundle.add_resource({
+              type: "js",
+              path: "/component.js",
+              data: contents,
+              where: 'client'
+            });
+          } catch(e) {}
 
-        // TODO: add an interface which lets the user know that the files are being built
-        try {
-          var contents = fs.readFileSync(js_path);
-          bundle.add_resource({
-            type: "js",
-            path: "/component.js",
-            data: contents,
-            where: 'client'
-          });
-        } catch(e) {}
+          try {
+            var contents = fs.readFileSync(css_path);
+            bundle.add_resource({
+              type: "css",
+              path: "/component.css",
+              data: contents,
+              where: 'client'
+            });
+          } catch(e) {}
+        }
       }).run();
     }
   }
