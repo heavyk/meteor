@@ -34,7 +34,9 @@ function CPR {
 }
 cp meteor "$TARGET_DIR/bin"
 CPR app "$TARGET_DIR"
-CPR packages "$TARGET_DIR"
+#CPR packages "$TARGET_DIR"
+rm -rf "$TARGET_DIR/examples"
+ln -s `pwd`/packages "$TARGET_DIR"
 CPR examples "$TARGET_DIR"
 rm -rf "$TARGET_DIR"/examples/unfinished
 
