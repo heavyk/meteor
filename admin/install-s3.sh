@@ -5,7 +5,11 @@
 ## example.
 
 URLBASE="https://d3sqy0vbqsdhku.cloudfront.net"
+<<<<<<< HEAD
 VERSION="0.5.1"
+=======
+VERSION="0.5.2"
+>>>>>>> upstream/devel
 PKGVERSION="${VERSION}-1"
 
 UNAME=`uname`

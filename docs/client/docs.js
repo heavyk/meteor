@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 METEOR_VERSION = "0.5.1";
+=======
+METEOR_VERSION = "0.5.2";
+>>>>>>> upstream/devel
 
 Meteor.startup(function () {
   // XXX this is broken by the new multi-page layout.  Also, it was
